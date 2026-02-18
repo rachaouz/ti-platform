@@ -1,0 +1,19 @@
+# Fichier secret — ne jamais envoyer sur GitHub
+.env
+
+# Base de données locale
+*.db
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel
+venv/
+env/
+.venv/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
