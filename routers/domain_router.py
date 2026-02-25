@@ -22,28 +22,35 @@ def domain_lookup(
 
     formatted = {
         "Domain": report["domain"],
+        "IP Address": report["ip_address"],          # NOUVEAU
         "Registrar": report["registrar"],
         "Creation Date": report["creation_date"],
-        "Reputation Score": report["reputation_score"],
-        "Categories": report["categories"],
-        "Detection": {
-            "Malicious": report["detection"]["malicious"],
-            "Suspicious": report["detection"]["suspicious"],
-            "Undetected": report["detection"]["undetected"]
+
+        # --- SOURCE : VIRUSTOTAL ---
+        "VirusTotal": {
+            "Reputation Score": report["virustotal"]["reputation_score"],
+            "Categories": report["virustotal"]["categories"],
+            "Detection": {
+                "Malicious": report["virustotal"]["detection"]["malicious"],
+                "Suspicious": report["virustotal"]["detection"]["suspicious"],
+                "Undetected": report["virustotal"]["detection"]["undetected"]
+            },
+            "Last Analysis Date": report["virustotal"]["last_analysis_date"],
+            "Risk Score": report["virustotal"]["risk_score"],
+            "Risk Level": report["virustotal"]["risk_level"]
         },
-        "Last Analysis Date": report["last_analysis_date"],
-        "Risk": {
-            "Score": report["risk_score"],
-            "Level": report["risk_level"]
-        },
+
+        # --- SOURCE : SHODAN ---
         "Shodan": {
-            "Subdomains": report["shodan"].get("shodan_subdomains", []),
-            "Subdomains Count": report["shodan"].get("shodan_subdomains_count", 0),
-            "Tags": report["shodan"].get("shodan_tags", []),
-            "Open Ports": report["shodan"].get("shodan_ports", []),
-            "Open Ports Count": report["shodan"].get("shodan_ports_count", 0),
-            "CVEs Count": report["shodan"].get("shodan_vulns_count", 0)
+            "Subdomains": report["shodan"]["subdomains"],
+            "Subdomains Count": report["shodan"]["subdomains_count"],
+            "Tags": report["shodan"]["tags"],
+            "Open Ports": report["shodan"]["open_ports"],
+            "Open Ports Count": report["shodan"]["open_ports_count"],
+            "CVEs Count": report["shodan"]["cves_count"]
         },
+
+        # --- RISK GLOBAL ---
         "Global Risk": {
             "Score": report["global_risk_score"],
             "Level": report["global_risk_level"],

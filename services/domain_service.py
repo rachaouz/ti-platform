@@ -1,5 +1,6 @@
 import requests
 import os
+import socket
 from dotenv import load_dotenv
 from datetime import datetime
 from database.db import SessionLocal
@@ -11,9 +12,28 @@ VT_API_KEY = os.getenv("VT_API_KEY")
 SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
 
 
+def normalize_domain(domain: str) -> str:
+    """Supprime http://, https://, www. et le slash final"""
+    domain = domain.strip().lower()
+    for prefix in ["https://", "http://"]:
+        if domain.startswith(prefix):
+            domain = domain[len(prefix):]
+    if domain.startswith("www."):
+        domain = domain[4:]
+    domain = domain.split("/")[0]  # supprime tout ce qui suit un slash
+    return domain
+
+
+def resolve_ip(domain: str) -> str:
+    """Résout l'adresse IP d'un domaine"""
+    try:
+        ip = socket.gethostbyname(domain)
+        return ip
+    except socket.gaierror:
+        return "N/A"
+
+
 def calculate_risk(malicious, suspicious, reputation):
-    # Pour les domaines, la réputation positive est BONNE donc on l'ignore
-    # On pénalise uniquement si la réputation est négative
     reputation_penalty = abs(reputation) if reputation < 0 else 0
     score = (malicious * 5) + (suspicious * 3) + reputation_penalty
 
@@ -94,6 +114,12 @@ def shodan_domain_enrichment(domain: str):
 
 
 def get_domain_report(domain: str):
+    # 1. Normalisation du domaine (gère www., http://, etc.)
+    domain = normalize_domain(domain)
+
+    # 2. Résolution IP
+    ip_address = resolve_ip(domain)
+
     url = f"https://www.virustotal.com/api/v3/domains/{domain}"
     headers = {"x-apikey": VT_API_KEY}
     response = requests.get(url, headers=headers)
@@ -152,19 +178,32 @@ def get_domain_report(domain: str):
 
     return {
         "domain": domain,
+        "ip_address": ip_address,          # NOUVEAU
         "registrar": registrar,
         "creation_date": creation_date,
-        "reputation_score": data.get("reputation", 0),
-        "categories": categories,
-        "detection": {
-            "malicious": malicious,
-            "suspicious": suspicious,
-            "undetected": undetected
+        # --- SOURCE : VIRUSTOTAL ---
+        "virustotal": {
+            "reputation_score": data.get("reputation", 0),
+            "categories": categories,
+            "detection": {
+                "malicious": malicious,
+                "suspicious": suspicious,
+                "undetected": undetected
+            },
+            "last_analysis_date": last_analysis_date,
+            "risk_score": risk_score,
+            "risk_level": risk_level
         },
-        "last_analysis_date": last_analysis_date,
-        "risk_score": risk_score,
-        "risk_level": risk_level,
-        "shodan": shodan_data,
+        # --- SOURCE : SHODAN ---
+        "shodan": {
+            "subdomains": shodan_data.get("shodan_subdomains", []),
+            "subdomains_count": shodan_data.get("shodan_subdomains_count", 0),
+            "tags": shodan_data.get("shodan_tags", []),
+            "open_ports": shodan_data.get("shodan_ports", []),
+            "open_ports_count": shodan_data.get("shodan_ports_count", 0),
+            "cves_count": shodan_data.get("shodan_vulns_count", 0)
+        },
+        # --- RISK GLOBAL ---
         "global_risk_score": global_score,
         "global_risk_level": global_level,
         "confidence": confidence

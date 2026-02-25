@@ -9,6 +9,13 @@ app = FastAPI(
     version="1.0"
 )
 
+# Création des tables au démarrage
+models.Base.metadata.create_all(bind=engine)
+
+# Routers
 app.include_router(domain_router)
 
-models.Base.metadata.create_all(bind=engine)
+
+@app.get("/", tags=["Health"])
+def root():
+    return {"status": "ok", "message": "Threat Intelligence Platform is running"}
