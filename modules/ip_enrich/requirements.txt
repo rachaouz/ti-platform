@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+requests
+python-dotenv
+sqlalchemy>=1.4.0
