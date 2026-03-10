@@ -93,4 +93,4 @@ while True:
 
     print("\n🤖 Mistral : ", end="", flush=True)
     print(ask_mistral(user_input, context))
-    print("-" * 60)
+    print("-" * 61)
