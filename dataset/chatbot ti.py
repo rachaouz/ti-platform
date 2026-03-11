@@ -5,9 +5,9 @@ DATASET_FILE = "dataset/domain_dataset.jsonl"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "mistral"
 
-print("=" * 60)
+print("=" * 62)
 print("  CHATBOT T.I — Mistral via Ollama (Mode Local)")
-print("=" * 60)
+print("=" * 62)
 
 print("\n Chargement du dataset domaines...")
 domain_db = {} #creer un dico vide pour stocker les domaines et leurs infos
