@@ -37,8 +37,6 @@ def convert_to_jsonl(lines):
         domain = line.strip()
         if not is_valid_domain(domain): #si domain nn valide je passe au suivant
             continue
-
-        # Format prompt/réponse pour l'entraînement LoRA
         entry = {
             "prompt": f"Is the domain '{domain}' malicious?",
             "response": f"Yes, the domain '{domain}' is classified as malicious. It has been flagged for hosting malware or being involved in malicious activity.",
@@ -88,4 +86,4 @@ if __name__ == "__main__":#si ce fichier est exécuté directement, alors le cod
 
     print("\n🎉 Dataset prêt pour le fine-tuning LoRA !")
     print(f"📁 Fichier généré : {OUTPUT_FILE}")
-    print(f"📊 Nombre d'entrées : {len(entries)}")
+    print(f"📊 Nombre d'entrées : {len(entries)}") 
