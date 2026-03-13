@@ -3,16 +3,9 @@ import requests
 import time
 import os
 VT_API_KEY = os.getenv("VT_API_KEY")
-
-# ============================================================
-# Script : Enrichissement dataset domaines via VirusTotal
-# Output : domain_dataset.json
-# Format : {"type": "domain", "value": "...", "info": "..."}
-# ============================================================
-
 GITHUB_URL = "https://raw.githubusercontent.com/romainmarcoux/malicious-domains/main/full-domains-aa.txt"
 OUTPUT_FILE = "dataset/domain_dataset.json"
-MAX_DOMAINS = 10      # Change à 500 quand le test est ok
+MAX_DOMAINS = 10 
 DELAY = 16
 
 # Types de menaces connus
@@ -21,20 +14,14 @@ KNOWN_THREATS = [
     "botnet", "spam", "scam", "fraud", "exploit", "adware",
     "cryptominer", "backdoor", "c2", "command and control"
 ]
-
-# ============================================================
 # 1. Télécharger les domaines depuis GitHub
-# ============================================================
 def download_domains():
     print("📥 Téléchargement des domaines depuis GitHub...")
     response = requests.get(GITHUB_URL, timeout=30)
     lines = [l.strip() for l in response.text.splitlines() if l.strip() and not l.startswith("#")]
     print(f"✅ {len(lines)} domaines téléchargés")
     return lines[:MAX_DOMAINS]
-
-# ============================================================
 # 2. Extraire le type de menace
-# ============================================================
 def extract_threat_type(attributes):
     """Cherche le type de menace dans plusieurs champs VirusTotal"""
 
@@ -68,10 +55,7 @@ def extract_threat_type(attributes):
                 return threat
 
     return None
-
-# ============================================================
 # 3. Vérifier un domaine sur VirusTotal
-# ============================================================
 def check_virustotal(domain):
     url = f"https://www.virustotal.com/api/v3/domains/{domain}"
     headers = {"x-apikey": VT_API_KEY}
@@ -112,10 +96,7 @@ def check_virustotal(domain):
     except Exception as e:
         print(f"❌ Erreur pour {domain}: {e}")
         return None
-
-# ============================================================
 # 4. Main
-# ============================================================
 if __name__ == "__main__":
     print("=" * 60)
     print("  VIRUSTOTAL DOMAIN ENRICHMENT — Chatbot T.I")
