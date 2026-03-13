@@ -1,5 +1,27 @@
+<<<<<<< HEAD
 env/
 __pycache__/
 *.pyc
 .env
 .env.example
+=======
+# Fichier secret — ne jamais envoyer sur GitHub
+.env
+
+# Base de données locale
+*.db
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel
+venv/
+env/
+.venv/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+>>>>>>> 3562cf76fda63f37d9767c982246ffe4f7ac7c27

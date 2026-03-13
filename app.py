@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import re
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
@@ -94,3 +95,26 @@ def scan_ioc(value: str = Query(..., description="IOC value (IP, Domain, Hash, U
     # 5️⃣ Sinon → Domain
     from modules.domain_enrich.services.domain_service import get_domain_report
     return get_domain_report(value)
+=======
+from fastapi import FastAPI
+from routers.domain_router import router as domain_router
+from database.db import engine
+from database import models
+
+app = FastAPI(
+    title="Threat Intelligence Platform",
+    description="Plateforme pour enrichissement de domaines via VirusTotal et Shodan",
+    version="1.0"
+)
+
+# Création des tables au démarrage
+models.Base.metadata.create_all(bind=engine)
+
+# Routers
+app.include_router(domain_router)
+
+
+@app.get("/", tags=["Health"])
+def root():
+    return {"status": "ok", "message": "Threat Intelligence Platform is running"}
+>>>>>>> 3562cf76fda63f37d9767c982246ffe4f7ac7c27

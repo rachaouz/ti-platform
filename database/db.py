@@ -1,10 +1,16 @@
 from sqlalchemy import create_engine
+<<<<<<< HEAD
 from sqlalchemy.orm import sessionmaker, declarative_base
+=======
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+>>>>>>> 3562cf76fda63f37d9767c982246ffe4f7ac7c27
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
+<<<<<<< HEAD
 # URL unique pour la base centralisée
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./threatintel.db")
 
@@ -34,3 +40,12 @@ def get_db():
 def init_db():
     from . import models  # important pour importer tous les modèles
     Base.metadata.create_all(bind=engine)
+=======
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./threat_intel.db")
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+>>>>>>> 3562cf76fda63f37d9767c982246ffe4f7ac7c27
