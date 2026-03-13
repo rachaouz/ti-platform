@@ -1,14 +1,14 @@
 import json
 import requests
 import time
+import os
+VT_API_KEY = os.getenv("VT_API_KEY")
 
 # ============================================================
 # Script : Enrichissement dataset domaines via VirusTotal
 # Output : domain_dataset.json
 # Format : {"type": "domain", "value": "...", "info": "..."}
 # ============================================================
-
-VT_API_KEY = "b9b09caacdb838292b15bb90961e705a6c1d9bfbb73f0dfa397489daad25ebb7"
 
 GITHUB_URL = "https://raw.githubusercontent.com/romainmarcoux/malicious-domains/main/full-domains-aa.txt"
 OUTPUT_FILE = "dataset/domain_dataset.json"
